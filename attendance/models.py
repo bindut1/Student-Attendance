@@ -85,6 +85,6 @@ class Image(models.Model):
     student = models.ForeignKey(Account, on_delete=models.CASCADE)
     image_name = models.CharField(max_length=255)
 
-
-
-
+class Feature(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    vector = models.TextField(500)
