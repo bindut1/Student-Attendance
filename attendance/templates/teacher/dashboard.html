@@ -33,12 +33,12 @@
             <div class="ms-auto">
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user"></i> TS. Nguyễn Văn B
+                        <i class="fas fa-user"></i> {{user.full_name}}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="#"><i class="fas fa-id-card me-2"></i>Thông tin cá nhân</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
                     </ul>
                 </div>
             </div>
@@ -57,14 +57,14 @@
                     <div class="card-body">
                         <div class="text-center mb-4">
                             <img src="{% static 'placeholder-avatar.jpg' %}" alt="Avatar" class="rounded-circle mb-3" style="width: 150px; height: 150px;">
-                            <h4 class="mb-0">TS. Nguyễn Văn B</h4>
+                            <h4 class="mb-0">TS.{{user.full_name}}</h4>
                             <p class="text-muted">Giảng viên</p>
                         </div>
                         <div class="mb-4">
-                            <p><strong>Mã giảng viên:</strong> GV001</p>
-                            <p><strong>Khoa:</strong> Công nghệ thông tin</p>
-                            <p><strong>Email:</strong> nguyenvanb@teacher.edu.vn</p>
-                            <p><strong>Số điện thoại:</strong> 0123456789</p>
+                            <p><strong>Mã giảng viên:</strong> {{user.account_id}}</p>
+                            <p><strong>Khoa:</strong>{{user.faculty}}</p>
+                            <p><strong>Email:</strong> {{user.email}}</p>
+                            <p><strong>Số điện thoại:</strong> {{user.phone_number}}</p>
                         </div>
                         <div class="text-center">
                             <button class="btn btn-outline-primary">
@@ -108,63 +108,62 @@
                 </div>
             </div>
 
-            <!-- Right Column - Classes and Attendance -->
-            <div class="col-md-8">
-                <!-- Today's Classes -->
-                <div class="card mb-4">
-                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0"><i class="fas fa-calendar-day"></i> Lịch dạy hôm nay</h5>
-                        <span class="badge bg-light text-dark">19/02/2025</span>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Thời gian</th>
-                                        <th>Môn học</th>
-                                        <th>Lớp</th>
-                                        <th>Phòng</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>07:00 - 09:20</td>
-                                        <td>Lập trình Web</td>
-                                        <td>CNTT2021</td>
-                                        <td>A2.01</td>
-                                        <td><span class="badge bg-success">Đang diễn ra</span></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm" title="Xem điểm danh">
-                                                <i class="fas fa-list-check"></i>
-                                            </button>
-                                            <button class="btn btn-success btn-sm" title="Xuất file Excel">
-                                                <i class="fas fa-file-excel"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>13:00 - 15:20</td>
-                                        <td>Lập trình Web</td>
-                                        <td>CNTT2022</td>
-                                        <td>A2.02</td>
-                                        <td><span class="badge bg-warning text-dark">Sắp diễn ra</span></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm" title="Xem điểm danh">
-                                                <i class="fas fa-list-check"></i>
-                                            </button>
-                                            <button class="btn btn-success btn-sm" title="Xuất file Excel">
-                                                <i class="fas fa-file-excel"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+ <div class="col-md-8">
+        <!-- Today's Classes -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0"><i class="fas fa-calendar-day"></i> Lịch dạy hôm nay</h5>
+                <span class="badge bg-light text-dark">{{ today }}</span> <!-- Hiển thị ngày hôm nay -->
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Môn học</th>
+                                <th>Lớp</th>
+                                <th>Phòng</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in instructor_courses_today %}
+                                <tr>
+                                    <td>{{ course.start_time|time:"H:i" }} - {{ course.end_time|time:"H:i" }}</td>
+                                    <td>{{ course.course_name }}</td>
+                                    <td>{{ course.class_name }}</td>
+                                    <td>{{ course.room }}</td>
+                                    <td>
+                                        {% if course.start_time < now %}
+                                            <span class="badge bg-success">Đang diễn ra</span>
+                                        {% elif course.start_time > now %}
+                                            <span class="badge bg-warning text-dark">Sắp diễn ra</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Hoàn thành</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" title="Xem điểm danh">
+                                            <i class="fas fa-list-check"></i>
+                                        </button>
+                                        <button class="btn btn-success btn-sm" title="Xuất file Excel">
+                                            <i class="fas fa-file-excel"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Bạn không có lớp dạy nào hôm nay.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
+    </div>
 
                 <!-- Attendance History -->
                 <div class="card">

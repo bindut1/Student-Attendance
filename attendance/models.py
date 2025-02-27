@@ -7,7 +7,7 @@ class AccountManager(BaseUserManager):
             raise ValueError("User must have an email address")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        user.set_password(password) 
         user.save(using=self._db)
         return user
 
@@ -17,11 +17,14 @@ class AccountManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class Account(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = [
+        ('student', 'Student'),
+        ('instructor', 'Instructor'),
+    ]
     account_id = models.CharField(max_length=50, primary_key=True)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
     full_name = models.CharField(max_length=100)
-    role = models.CharField(max_length=20, blank=True, null=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, blank=True, null=True)
     gender = models.BooleanField(default=True)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
@@ -44,9 +47,13 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["full_name"]
-
+    def save(self, *args, **kwargs):
+        if self.password:
+            self.set_password(self.password) 
+        super(Account, self).save(*args, **kwargs)
     def __str__(self):
         return self.email
+
 
 
 class Course(models.Model):

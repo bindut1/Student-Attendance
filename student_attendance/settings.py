@@ -79,8 +79,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'student_attendance',
         'USER': 'root',
-        'PASSWORD': 'bindut.1',
-        'HOST': ''
+        'PASSWORD': '12345Thanh',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
