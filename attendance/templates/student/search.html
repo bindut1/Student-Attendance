@@ -1,0 +1,27 @@
+<form method="GET" action="{% url 'student_search' %}" class="d-flex mb-3">
+    <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Nhập email, họ tên hoặc số điện thoại...">
+    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+</form>
+
+{% if students %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.full_name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.phone_number }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="text-center">Không tìm thấy sinh viên nào.</p>
+{% endif %}

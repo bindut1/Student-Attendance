@@ -1,93 +1,40 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Portal</title>
-    {% load static %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .nav-link {
-            color: rgba(255, 255, 255, 0.85) !important;
-        }
-        .nav-link:hover {
-            color: white !important;
-        }
-        .main-content {
-            min-height: calc(100vh - 120px);
-        }
-        .camera-btn {
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
-</head>
-<body class="bg-light">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand" href="#">Student Portal</a>
-            <div class="d-flex">
-                <a href="#" class="nav-link me-3"><i class="fas fa-home"></i> Trang chủ</a>
-                <a href="#" class="nav-link me-3"><i class="fas fa-calendar"></i> Lịch học</a>
-                <a href="#" class="nav-link me-3"><i class="fas fa-history"></i> Lịch sử điểm danh</a>
-                <a href="#" class="nav-link me-3"><i class="fas fa-search"></i> Tìm kiếm</a>
-            </div>
-            <div class="ms-auto">
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user"></i> Nguyễn Văn A
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-id-card me-2"></i>Thông tin cá nhân</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    <!-- Main Content -->
-    <div class="container-fluid px-4 py-4 main-content">
-        <div class="row">
-            <!-- Left Column -->
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0"><i class="fas fa-user-circle"></i> Thông tin cá nhân</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center mb-4">
-                            <img src="{% static 'placeholder-avatar.jpg' %}" alt="Avatar" class="rounded-circle mb-3" style="width: 150px; height: 150px;">
-                            <h4 class="mb-0">Nguyễn Văn A</h4>
-                            <p class="text-muted">Sinh viên</p>
+{% block title %}Trang cá nhân{% endblock %}
+
+{% block content %}
+<div class="card border-0 rounded-0">
+    <div class="card-body p-0">
+        <div class="text-center bg-light py-5">
+            <img src="{{ student.avatar.url }}" alt="Avatar" class="rounded-circle mb-4"
+                 style="width: 200px; height: 200px;">
+            <h2 class="mb-2">{{ student.full_name }}</h2>
+            <p class="text-muted mb-4">Sinh viên</p>
+
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="bg-white p-4 rounded shadow-sm h-100">
+                                    <h6 class="text-muted mb-3"><b>THÔNG TIN CƠ BẢN</b></h6>
+                                    <p class="mb-2"><strong>Họ tên:</strong> {{ student.full_name }}</p>
+                                    <p class="mb-2"><strong>Giới tính:</strong> {{ student.gender|yesno:"Nữ,Nam" }}</p>
+                                    <p class="mb-2"><strong>Khoa:</strong> {{ student.faculty }}</p>
+                                    <p class="mb-2"><strong>Lớp:</strong> {{ student.class_name }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-white p-4 rounded shadow-sm h-100">
+                                    <h6 class="text-muted mb-3"><b>THÔNG TIN LIÊN HỆ</b></h6>
+                                    <p class="mb-2"><strong>Email:</strong> {{ student.email }}</p>
+                                    <p class="mb-2"><strong>Số điện thoại:</strong> {{ student.phone_number }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <p class="mb-2"><strong>Mã sinh viên:</strong></p>
-                                <p class="text-muted">SV001</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-2"><strong>Lớp:</strong></p>
-                                <p class="text-muted">CNTT2021</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-2"><strong>Khoa:</strong></p>
-                                <p class="text-muted">Công nghệ thông tin</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-2"><strong>Email:</strong></p>
-                                <p class="text-muted">sv001@student.edu.vn</p>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-outline-primary">
+                        <div class="text-center mt-4">
+                            <button class="btn btn-primary btn-lg"
+                                    onclick="window.location.href='{% url 'student_edit' student.account_id %}'">
                                 <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin
                             </button>
                         </div>
@@ -95,123 +42,12 @@
                 </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="col-md-6">
-                <!-- Schedule Card -->
-                <div class="card mb-4">
-                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0"><i class="fas fa-calendar-day"></i> Lịch học hôm nay</h5>
-                        <span class="badge bg-light text-dark">19/02/2025</span>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="px-3">Thời gian</th>
-                                        <th class="px-3">Môn học</th>
-                                        <th class="px-3">Phòng</th>
-                                        <th class="px-3">Giảng viên</th>
-                                        <th class="px-3 text-center">Điểm danh</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="px-3">07:00 - 09:20</td>
-                                        <td class="px-3">Lập trình Web</td>
-                                        <td class="px-3">A2.01</td>
-                                        <td class="px-3">TS. Nguyễn Văn B</td>
-                                        <td class="px-3 text-center">
-                                            <button class="btn btn-success camera-btn">
-                                                <i class="fas fa-camera"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-3">09:30 - 11:50</td>
-                                        <td class="px-3">Cơ sở dữ liệu</td>
-                                        <td class="px-3">A3.02</td>
-                                        <td class="px-3">ThS. Trần Thị C</td>
-                                        <td class="px-3 text-center">
-                                            <span class="badge bg-success px-3 py-2">
-                                                <i class="fas fa-check me-1"></i>Đã điểm danh
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-3">13:00 - 15:20</td>
-                                        <td class="px-3">An toàn mạng</td>
-                                        <td class="px-3">A4.03</td>
-                                        <td class="px-3">PGS.TS. Lê Văn D</td>
-                                        <td class="px-3 text-center">
-                                            <button class="btn btn-success camera-btn">
-                                                <i class="fas fa-camera"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search Card -->
-                <div class="card">
-                    <div class="card-header bg-secondary text-white">
-                        <h5 class="card-title mb-0"><i class="fas fa-search"></i> Tìm kiếm</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="input-group mb-3">
-                                    <select class="form-select" style="max-width: 150px;">
-                                        <option value="teacher">Giảng viên</option>
-                                        <option value="student">Sinh viên</option>
-                                    </select>
-                                    <input type="text" class="form-control" placeholder="Nhập từ khóa...">
-                                    <button class="btn btn-primary">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <h6 class="text-muted mb-3">Kết quả gần đây:</h6>
-                            <div class="list-group">
-                                <a href="#" class="list-group-item list-group-item-action py-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="mb-1">TS. Nguyễn Văn B</h6>
-                                            <small class="text-muted">Khoa Công nghệ thông tin</small>
-                                        </div>
-                                        <span class="badge bg-primary">Giảng viên</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="list-group-item list-group-item-action py-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="mb-1">Trần Thị E</h6>
-                                            <small class="text-muted">CNTT2021</small>
-                                        </div>
-                                        <span class="badge bg-info">Sinh viên</span>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            {% if error %}
+            <div class="alert alert-danger mt-3">
+                {{ error }}
             </div>
+            {% endif %}
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-white py-3 border-top">
-        <div class="container-fluid px-4">
-            <p class="text-muted text-center mb-0">&copy; 2025 Student Portal. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
+{% endblock %}
