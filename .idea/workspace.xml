@@ -5,18 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b522e867-00ed-4837-8eae-30fadf8dff56" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/attendance/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/attendance/templates/student/edit.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/attendance/templates/student/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/migrations/0002_account_groups_account_is_active_account_is_staff_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/migrations/0003_alter_account_class_name_alter_account_date_of_birth_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/migrations/0004_feature.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/attendance/templates/student/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/templates/student/dashboard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/attendance/templates/student/schedule.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/attendance/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/templates/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/attendance/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/attendance/views/student_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/attendance/views/student_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student_attendance/settings.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,15 +36,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Lam",
-    "last_opened_file_path": "D:/PythonProject"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Lam&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/PythonProject&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
