@@ -3,51 +3,72 @@
 {% block title %}Trang cá nhân{% endblock %}
 
 {% block content %}
-<div class="card border-0 rounded-0">
-    <div class="card-body p-0">
-        <div class="text-center bg-light py-5">
-            <img src="{{ student.avatar.url }}" alt="Avatar" class="rounded-circle mb-4"
-                 style="width: 200px; height: 200px;">
-            <h2 class="mb-2">{{ student.full_name }}</h2>
-            <p class="text-muted mb-4">Sinh viên</p>
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar-wrapper">
+            <img src="{{ student.avatar }}" alt="Avatar" class="profile-avatar">
+        </div>
+        <h2 class="profile-name">{{ student.full_name }}</h2>
+        <p class="profile-role">Sinh viên</p>
+    </div>
 
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="bg-white p-4 rounded shadow-sm h-100">
-                                    <h6 class="text-muted mb-3"><b>THÔNG TIN CƠ BẢN</b></h6>
-                                    <p class="mb-2"><strong>Họ tên:</strong> {{ student.full_name }}</p>
-                                    <p class="mb-2"><strong>Giới tính:</strong> {{ student.gender|yesno:"Nữ,Nam" }}</p>
-                                    <p class="mb-2"><strong>Khoa:</strong> {{ student.faculty }}</p>
-                                    <p class="mb-2"><strong>Lớp:</strong> {{ student.class_name }}</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="bg-white p-4 rounded shadow-sm h-100">
-                                    <h6 class="text-muted mb-3"><b>THÔNG TIN LIÊN HỆ</b></h6>
-                                    <p class="mb-2"><strong>Email:</strong> {{ student.email }}</p>
-                                    <p class="mb-2"><strong>Số điện thoại:</strong> {{ student.phone_number }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center mt-4">
-                            <button class="btn btn-primary btn-lg"
-                                    onclick="window.location.href='{% url 'student_edit' student.account_id %}'">
-                                <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin
-                            </button>
-                        </div>
+    <div class="profile-content">
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="card-header">
+                    <i class="fas fa-user-circle"></i>
+                    <h3>Thông Tin Cơ Bản</h3>
+                </div>
+                <div class="card-body">
+                    <div class="profile-item">
+                        <span class="item-label">Họ tên</span>
+                        <span class="item-value">{{ student.full_name }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Giới tính</span>
+                        <span class="item-value">{{ student.gender|yesno:"Nữ,Nam" }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Khoa</span>
+                        <span class="item-value">{{ student.faculty }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Lớp</span>
+                        <span class="item-value">{{ student.class_name }}</span>
                     </div>
                 </div>
             </div>
 
-            {% if error %}
-            <div class="alert alert-danger mt-3">
-                {{ error }}
+            <div class="profile-card">
+                <div class="card-header">
+                    <i class="fas fa-address-book"></i>
+                    <h3>Thông Tin Liên Hệ</h3>
+                </div>
+                <div class="card-body">
+                    <div class="profile-item">
+                        <span class="item-label">Email</span>
+                        <span class="item-value">{{ student.email }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Số điện thoại</span>
+                        <span class="item-value">{{ student.phone_number }}</span>
+                    </div>
+                </div>
             </div>
-            {% endif %}
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'student_edit' student.account_id %}" class="btn-edit">
+                <i class="fas fa-edit"></i> Chỉnh sửa thông tin
+            </a>
         </div>
     </div>
+
+    {% if error %}
+    <div class="profile-error">
+        {{ error }}
+    </div>
+    {% endif %}
 </div>
+
 {% endblock %}

@@ -4,10 +4,12 @@ from attendance.models import Account, ClassSchedule
 from django.shortcuts import render, get_object_or_404, redirect
 from attendance.forms import StudentForm
 from datetime import datetime
+import cloudinary
+import cloudinary.uploader
 
 def student_info(request):
     try:
-        student = Account.objects.filter(role='student').first()  # Lấy sinh viên đầu tiên
+        student = Account.objects.get(role='student', account_id='acc2')
         if not student:
             raise Http404("Không tìm thấy thông tin sinh viên")
         context = {
@@ -26,35 +28,47 @@ def student_edit(request, account_id):
     student = get_object_or_404(Account, account_id=account_id, role='student')
 
     if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
+        form = StudentForm(request.POST, request.FILES, instance=student)
         if form.is_valid():
+            if 'avatar' in request.FILES:
+                avatar = request.FILES['avatar']
+                cloudinary_response = cloudinary.uploader.upload(
+                    avatar,
+                    folder='student_avatars',
+                    transformation=[
+                        {'width': 300, 'height': 300, 'crop': 'fill'},
+                        {'radius': 'max'}
+                    ]
+                )
+                student.avatar = cloudinary_response['secure_url']
+
             form.save()
             return redirect('student_info')
     else:
         form = StudentForm(instance=student)
 
-    return render(request, 'student/edit.html', {'form': form, 'student': student})
+    return render(request, 'student/edit.html', {
+        'form': form,
+        'student': student
+    })
 
 
 def student_search(request):
-    query = request.GET.get('q', '').strip()  # Lấy giá trị tìm kiếm từ URL
-    students = Account.objects.all()
+    query = request.GET.get('q', '').strip()
+    students = Account.objects.filter(role='student')
 
     if query:
         students = students.filter(
             models.Q(email__icontains=query) |
-            models.Q(full_name__icontains=query) |
-            models.Q(phone_number__icontains=query)
+            models.Q(full_name__icontains=query)
         )
 
     return render(request, 'student/search.html', {'students': students, 'query': query})
 
 
 def student_schedule(request, account_id):
-    # Get student information
     student = get_object_or_404(Account, account_id=account_id, role='student')
 
-    # Get current day of the week
     current_day = datetime.now().strftime('%A')
 
     # Lay luon du lieu cua FK, tranh truy van nhieu lan
@@ -62,11 +76,9 @@ def student_schedule(request, account_id):
         student_id=student.account_id
     ).select_related('course')
 
-    # Filter courses based on the current day of the week
     courses_today = []
     for schedule in schedules:
         course = schedule.course
-        # Check if the current day is in the course's weekdays
         if current_day.lower() in course.weekdays.lower():
             courses_today.append({
                 'course_name': course.course_name,

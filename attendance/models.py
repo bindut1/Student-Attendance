@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class Account(models.Model):
     account_id = models.CharField(max_length=50, primary_key=True)
@@ -7,7 +8,7 @@ class Account(models.Model):
     full_name = models.CharField(max_length=100)
     role = models.CharField(max_length=20, blank=True, null=True)
     gender = models.BooleanField(default=True)
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    avatar = models.URLField(max_length=500, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
     class_name = models.CharField(max_length=100, blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
