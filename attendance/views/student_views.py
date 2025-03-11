@@ -43,7 +43,9 @@ def student_edit(request, account_id):
                 # )
                 # student.avatar = cloudinary_response['secure_url']
 
-            form.save()
+            student = form.save(commit=False)
+            student.password = Account.objects.get(pk=student.pk).password  
+            student.save()
             return redirect('student_info')
     else:
         form = StudentForm(instance=student)

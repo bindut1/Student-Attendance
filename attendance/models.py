@@ -48,9 +48,15 @@ class Account(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["full_name"]
     def save(self, *args, **kwargs):
-        if self.password:
-            self.set_password(self.password) 
-        super(Account, self).save(*args, **kwargs)
+     if self.pk:  # Nếu tài khoản đã tồn tại
+        original = Account.objects.get(pk=self.pk)
+        if original.password != self.password:  # Chỉ hash lại nếu password thay đổi
+            self.set_password(self.password)
+     else:
+        self.set_password(self.password)  # Nếu tài khoản mới, hash password luôn
+
+     super(Account, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.email
 
