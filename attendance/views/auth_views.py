@@ -13,7 +13,7 @@ def login_view(request):
             if user.role == "instructor":
                 return redirect("teacher_dashboard") 
             elif user.role == "student":
-                return redirect("student_dashboard")  
+                return redirect("student_info")  
         else:
             messages.error(request, "Email hoặc mật khẩu không đúng")
 
