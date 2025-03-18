@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}">
 <div class="container py-4">
     <h2 class="mb-4 text-center">Lịch học của bạn - {{ current_day }}</h2>
 
@@ -15,6 +14,7 @@
                         <th>Thời gian</th>
                         <th>Phòng học</th>
                         <th>Ngày học</th>
+                        <th>Điểm danh</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +27,7 @@
                         </td>
                         <td class="text-center">{{ course.room }}</td>
                         <td class="text-center">{{ course.weekdays }}</td>
+                        <td class="text-center">Chưa điểm danh</td>
                     </tr>
                     {% endfor %}
                 </tbody>

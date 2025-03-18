@@ -4,7 +4,7 @@ from datetime import datetime
 from attendance.models import ClassSchedule, Course, Account
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
-from attendance.forms import StudentForm
+from attendance.forms import FormHelper
 from django.db import models
 from django.http import JsonResponse
 from attendance.services.serverAI import send_images_to_serverAI
@@ -35,7 +35,7 @@ def student_edit(request, account_id):
     student = request.user
 
     if request.method == 'POST':
-        form = StudentForm(request.POST, request.FILES, instance=student)
+        form = FormHelper(request.POST, request.FILES, instance=student)
         if form.is_valid():
             if 'avatar' in request.FILES:
                 avatar = request.FILES['avatar']
@@ -54,7 +54,7 @@ def student_edit(request, account_id):
             student.save()
             return redirect('student_info')
     else:
-        form = StudentForm(instance=student)
+        form = FormHelper(instance=student)
 
     return render(request, 'student/edit.html', {
         'form': form,

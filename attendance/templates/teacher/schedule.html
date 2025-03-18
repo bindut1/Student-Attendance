@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!--<link rel="stylesheet" type="text/css" href="{% static 'css/schedule.css' %}">-->
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Lịch dạy của bạn - {{ current_day }}</h2>
+
+    {% if courses_today %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+            <tr class="text-center">
+                <th>Môn học</th>
+                <th>Thời gian</th>
+                <th>Phòng học</th>
+                <th>Ngày dạy</th>
+                <th>Danh sách sinh viên</th>
+                <th>Xuất dữ liệu</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for course in courses_today %}
+            <tr>
+                <td>{{ course.course_name }}</td>
+                <td class="text-center">
+                    {{ course.start_time|slice:":5" }} -
+                    {{ course.end_time|slice:":5" }}
+                </td>
+                <td class="text-center">{{ course.room }}</td>
+                <td class="text-center">{{ course.weekdays }}</td>
+                <td class="text-center">
+                    <a href="{% url 'student_list_by_course' course.course_id %}">Xem</a>
+                </td>
+                <td class="text-center">Xuất</td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        Hôm nay bạn không có lịch dạy.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

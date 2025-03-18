@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <h3 class="mb-4 text-center">Danh sách sinh viên lớp: {{ course.course_name }}</h3>
+
+    {% if students %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-success text-center">
+            <tr>
+                <th>Mã sinh viên</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Lớp</th>
+                <th>Giới tính</th>
+                <th>Điểm danh</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for s in students %}
+            <tr>
+                <td>{{ s.student.account_id }}</td>
+                <td>{{ s.student.full_name }}</td>
+                <td>{{ s.student.email }}</td>
+                <td>{{ s.student.class_name }}</td>
+                <td>{{ s.student.gender|yesno:"Nam,Nữ" }}</td>
+                <td>Chưa điểm danh</td>
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">Chưa có sinh viên nào trong lớp này.</div>
+    {% endif %}
+</div>
+{% endblock %}
