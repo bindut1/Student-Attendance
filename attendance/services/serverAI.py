@@ -6,7 +6,7 @@ def send_images_to_serverAI(account_id, image_files):
     files = []
 
     for img in image_files:
-        img.seek(0)  # QUAN TRỌNG: đảm bảo đọc từ đầu
+        img.seek(0)
         files.append(('images', (img.name, img.read(), img.content_type or 'image/jpeg')))
 
     response = requests.post(url, data=data, files=files)

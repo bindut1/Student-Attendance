@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from attendance.models import ClassSchedule, Course,Account
+from attendance.models import ClassSchedule, Course, Account
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from attendance.forms import StudentForm
 from django.db import models
 from django.http import JsonResponse
 from attendance.services.serverAI import send_images_to_serverAI
+import cloudinary
+import cloudinary.uploader
 
 
 @login_required
@@ -26,7 +28,8 @@ def student_info(request):
             'error': str(e),
             'message': 'Lỗi truy xuất thông tin'
         })
-    
+
+
 @login_required
 def student_edit(request, account_id):
     student = request.user
@@ -36,18 +39,18 @@ def student_edit(request, account_id):
         if form.is_valid():
             if 'avatar' in request.FILES:
                 avatar = request.FILES['avatar']
-                # cloudinary_response = cloudinary.uploader.upload(
-                #     avatar,
-                #     folder='student_avatars',
-                #     transformation=[
-                #         {'width': 300, 'height': 300, 'crop': 'fill'},
-                #         {'radius': 'max'}
-                #     ]
-                # )
-                # student.avatar = cloudinary_response['secure_url']
+                cloudinary_response = cloudinary.uploader.upload(
+                    avatar,
+                    folder='student_avatars',
+                    transformation=[
+                        {'width': 300, 'height': 300, 'crop': 'fill'},
+                        {'radius': 'max'}
+                    ]
+                )
+                student.avatar = cloudinary_response['secure_url']
 
             student = form.save(commit=False)
-            student.password = Account.objects.get(pk=student.pk).password  
+            student.password = Account.objects.get(pk=student.pk).password
             student.save()
             return redirect('student_info')
     else:
@@ -57,6 +60,8 @@ def student_edit(request, account_id):
         'form': form,
         'student': student
     })
+
+
 @login_required
 def student_search(request):
     query = request.GET.get('q', '').strip()
@@ -69,6 +74,8 @@ def student_search(request):
         )
 
     return render(request, 'student/search.html', {'students': students, 'query': query})
+
+
 @login_required
 def student_schedule(request, account_id):
     student = request.user
@@ -98,6 +105,7 @@ def student_schedule(request, account_id):
     }
     return render(request, 'student/schedule.html', context)
 
+
 @login_required
 def upload_and_send(request, account_id):
     if request.method == 'POST':
@@ -111,6 +119,8 @@ def upload_and_send(request, account_id):
             if response.status_code == 200:
                 return JsonResponse(response.json())
             else:
-                return JsonResponse({'error': f'Gửi ảnh thất bại - ServerAI trả về {response.status_code}: {response.text}'}, status=500)
+                return JsonResponse(
+                    {'error': f'Gửi ảnh thất bại - ServerAI trả về {response.status_code}: {response.text}'},
+                    status=500)
         except Exception as e:
             return JsonResponse({'error': f'Lỗi khi gửi ảnh: {str(e)}'}, status=500)

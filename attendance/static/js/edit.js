@@ -1,15 +1,24 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const avatarInput = document.getElementById("id_avatar");
-  const avatarPreview = document.querySelector(".avatar-preview");
+(function() {
+  function setupImagePreview() {
+    var input = document.getElementById('id_avatar');
+    var img = document.querySelector('.avatar-img');
 
-  avatarInput.addEventListener("change", function (event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        avatarPreview.src = e.target.result;
+    if (input && img) {
+      input.onchange = function() {
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(this.files[0]);
+        }
       };
-      reader.readAsDataURL(file);
     }
-  });
-});
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(setupImagePreview, 1);
+  } else {
+    document.addEventListener('DOMContentLoaded', setupImagePreview);
+  }
+})();
