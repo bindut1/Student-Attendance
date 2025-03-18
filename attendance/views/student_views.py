@@ -6,6 +6,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from attendance.forms import StudentForm
 from django.db import models
+from django.http import JsonResponse
+from attendance.services.serverAI import send_images_to_serverAI
+
 
 @login_required
 def student_info(request):
@@ -94,3 +97,20 @@ def student_schedule(request, account_id):
         'current_day': current_day
     }
     return render(request, 'student/schedule.html', context)
+
+@login_required
+def upload_and_send(request, account_id):
+    if request.method == 'POST':
+        try:
+            image_files = request.FILES.getlist('images')
+            if not image_files:
+                return JsonResponse({'error': 'Không có ảnh nào được gửi'}, status=400)
+
+            response = send_images_to_serverAI(account_id, image_files)
+
+            if response.status_code == 200:
+                return JsonResponse(response.json())
+            else:
+                return JsonResponse({'error': f'Gửi ảnh thất bại - ServerAI trả về {response.status_code}: {response.text}'}, status=500)
+        except Exception as e:
+            return JsonResponse({'error': f'Lỗi khi gửi ảnh: {str(e)}'}, status=500)

@@ -14,4 +14,5 @@ urlpatterns = [
     path('instructor/edit/<str:account_id>/', teacher_views.instructor_edit, name='instructor_edit'),
     path('instructor/<str:account_id>/schedule/', teacher_views.instructor_schedule, name='instructor_schedule'),
     path('instructor/search/', teacher_views.instructor_search, name='instructor_search'),
+    path('student/<str:account_id>/upload-images/', student_views.upload_and_send, name='student_upload_images'),
 ]
