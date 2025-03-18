@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.contrib.auth.hashers import make_password, identify_hasher
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -47,19 +48,18 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["full_name"]
+
     def save(self, *args, **kwargs):
-     if self.pk:  # Nếu tài khoản đã tồn tại
-        original = Account.objects.get(pk=self.pk)
-        if original.password != self.password:  # Chỉ hash lại nếu password thay đổi
-            self.set_password(self.password)
-     else:
-        self.set_password(self.password)  # Nếu tài khoản mới, hash password luôn
+        if self.password:
+            try:
+                identify_hasher(self.password)
+            except Exception:
+                self.password = make_password(self.password)
+        super().save(*args, **kwargs)
 
-     super(Account, self).save(*args, **kwargs)
-
+    # Removed password hashing in save method
     def __str__(self):
         return self.email
-
 
 
 class Course(models.Model):
