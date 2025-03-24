@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
     'cloudinary_storage',
-    'attendance.apps.AttendanceConfig'
+    'attendance.apps.AttendanceConfig',
+    'accounts.apps.AccountsConfig',
+    'courses.apps.CoursesConfig', 
+    'core.apps.CoreConfig',
 ]
 
 import os
@@ -69,7 +72,7 @@ ROOT_URLCONF = 'student_attendance.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,7 +101,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = "attendance.Account"
+AUTH_USER_MODEL = "accounts.Account"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
