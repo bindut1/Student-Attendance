@@ -37,7 +37,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("login")
+    return redirect("accounts:login")
 
 
 @login_required
@@ -78,7 +78,7 @@ def student_edit(request, account_id):
             student = form.save(commit=False)
             student.password = Account.objects.get(pk=student.pk).password
             student.save()
-            return redirect("student_info")
+            return redirect("accounts:student_info")
     else:
         form = FormHelper(instance=student)
 
@@ -140,7 +140,7 @@ def instructor_edit(request, account_id):
             instructor = form.save(commit=False)
             instructor.password = Account.objects.get(pk=instructor.pk).password
             instructor.save()
-            return redirect("instructor_info")
+            return redirect("accounts:instructor_info")
     else:
         form = FormHelper(instance=instructor)
 

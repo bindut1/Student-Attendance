@@ -32,7 +32,7 @@ def student_schedule(request, account_id):
         'courses_today': courses_today,
         'current_day': current_day
     }
-    return render(request, 'templates/student/schedule.html', context)
+    return render(request, 'student/schedule.html', context)
 
 @login_required
 def instructor_schedule(request, account_id):
@@ -53,7 +53,7 @@ def instructor_schedule(request, account_id):
                 'weekdays': schedule.weekdays
             })
 
-    return render(request, 'templates/instructor/schedule.html', {
+    return render(request, 'instructor/schedule.html', {
         'instructor': instructor,
         'courses_today': courses_today,
         'current_day': current_day

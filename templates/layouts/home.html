@@ -31,7 +31,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
             <li>
-              <a class="dropdown-item" href="{% url 'logout' %}">
+              <a class="dropdown-item" href="{% url 'accounts:logout' %}">
                 <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
               </a>
             </li>
@@ -39,7 +39,7 @@
         </div>
       {% else %}
         <!-- Nút đăng nhập khi chưa đăng nhập -->
-        <a href="{% url 'login' %}" class="btn btn-light">Đăng nhập</a>
+        <a href="{% url 'accounts:login' %}" class="btn btn-light">Đăng nhập</a>
       {% endif %}
     </div>
   </div>
@@ -53,9 +53,9 @@
   <div class="d-flex justify-content-center">
     {% if user.is_authenticated %}
       {% if user.role == "instructor" %}
-        <a href="{% url 'instructor_info' %}" class="btn btn-primary me-2">Vào trang thông tin</a>
+        <a href="{% url 'accounts:instructor_info' %}" class="btn btn-primary me-2">Vào trang thông tin</a>
       {% elif user.role == "student" %}
-        <a href="{% url 'student_info' %}" class="btn btn-primary me-2">Vào trang thông tin</a>
+        <a href="{% url 'accounts:student_info' %}" class="btn btn-primary me-2">Vào trang thông tin</a>
       {% endif %}
     {% endif %}
   </div>

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block title %}Trang cá nhân{% endblock %}
 
@@ -55,7 +55,7 @@
         </div>
 
         <div class="profile-actions">
-            <a href="{% url 'instructor_edit' instructor.account_id %}" class="btn-edit">
+            <a href="{% url 'accounts:instructor_edit' instructor.account_id %}" class="btn-edit">
                 <i class="fas fa-edit"></i> Chỉnh sửa thông tin
             </a>
         </div>

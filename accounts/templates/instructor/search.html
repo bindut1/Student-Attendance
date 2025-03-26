@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'layouts/base.html' %}
 {% load static %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/search.css' %}">
 
 <div class="search-container">
-    <form method="GET" action="{% url 'instructor_search' %}" class="d-flex mb-3">
+    <form method="GET" action="{% url 'accounts:instructor_search' %}" class="d-flex mb-3">
         <input type="text" name="q"
                value="{{ query|default_if_none:'' }}"
                class="form-control me-2"

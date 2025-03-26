@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'layouts/base.html' %}
 
 {% block title %}Trang cá nhân{% endblock %}
 
@@ -59,12 +59,12 @@
         </div>
 
         <div class="profile-actions">
-            <a href="{% url 'student_edit' student.account_id %}" class="btn-edit">
+            <a href="{% url 'accounts:student_edit' student.account_id %}" class="btn-edit">
                 <i class="fas fa-edit"></i> Chỉnh sửa thông tin
             </a>
         </div>
 
-        <form action="{% url 'student_upload_images' student.account_id %}" method="POST" enctype="multipart/form-data"
+        <form action="{% url 'face_recognition:student_upload_images' student.account_id %}" method="POST" enctype="multipart/form-data"
               style="margin-top: 20px;">
             {% csrf_token %}
             <label for="imageUpload">Gửi ảnh nhận diện khuôn mặt:</label>
