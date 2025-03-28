@@ -1,0 +1,53 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Lịch sử điểm danh</h2>
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Thông tin sinh viên</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Mã số sinh viên:</strong> {{ student.account_id }}</p>
+            <p><strong>Họ và tên:</strong> {{ student.full_name }}</p>
+            <p><strong>Email:</strong> {{ student.email }}</p>
+        </div>
+    </div>
+
+    {% if attendance_records %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr class="text-center">
+                    <th>Môn học</th>
+                    <th>Thời gian điểm danh</th>
+                    <th>Ngày điểm danh</th>
+                    <th>Phòng học</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_records %}
+                <tr>
+                    <td>{{ record.course.course_name }}</td>
+                    <td class="text-center">
+                        {{ record.check_in_time|time:"H:i" }}
+                    </td>
+                    <td class="text-center">
+                        {{ record.check_in_date|date:"d/m/Y" }}
+                    </td>
+                    <td class="text-center">
+                        {{ record.course.room }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> Chưa có dữ liệu điểm danh
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

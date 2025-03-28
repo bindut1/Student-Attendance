@@ -6,37 +6,76 @@
     <h2 class="mb-4 text-center">Lịch học của bạn - {{ current_day }}</h2>
 
     {% if courses_today %}
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-primary">
-                    <tr class="text-center">
-                        <th>Môn học</th>
-                        <th>Thời gian</th>
-                        <th>Phòng học</th>
-                        <th>Ngày học</th>
-                        <th>Điểm danh</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for course in courses_today %}
-                    <tr>
-                        <td>{{ course.course_name }}</td>
-                        <td class="text-center">
-                            {{ course.start_time|slice:":5" }} -
-                            {{ course.end_time|slice:":5" }}
-                        </td>
-                        <td class="text-center">{{ course.room }}</td>
-                        <td class="text-center">{{ course.weekdays }}</td>
-                        <td class="text-center">Chưa điểm danh</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr class="text-center">
+                    <th>Môn học</th>
+                    <th>Thời gian</th>
+                    <th>Phòng học</th>
+                    <th>Ngày học</th>
+                    <th>Điểm danh</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses_today %}
+                <tr>
+                    <td>{{ course.course_name }}</td>
+                    <td class="text-center">
+                        {{ course.start_time|slice:":5" }} -
+                        {{ course.end_time|slice:":5" }}
+                    </td>
+                    <td class="text-center">{{ course.room }}</td>
+                    <td class="text-center">{{ course.weekdays }}</td>
+                    <td class="text-center">
+                        {% if course.is_attended %}
+                            <i class="fas fa-check-circle text-success" style="font-size: 1.2rem;"></i>
+                        {% elif course.is_late %}
+                            <i class="fas fa-times-circle text-danger" style="font-size: 1.2rem;"></i>
+                            <span class="text-danger d-block small">Đã quá thời gian</span>
+                        {% else %}
+                            <button class="btn btn-link open-camera-btn p-0" data-course="{{ course.course_id }}">
+                                <i class="fas fa-camera text-primary" style="font-size: 1.2rem;"></i>
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% else %}
-        <div class="alert alert-warning text-center" role="alert">
-            Hôm nay không có lịch học.
-        </div>
+    <div class="alert alert-warning text-center" role="alert">
+        Hôm nay không có lịch học.
+    </div>
     {% endif %}
 </div>
+
+<div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cameraModalLabel">Điểm danh bằng khuôn mặt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="camera-container mb-3">
+                    <video id="video" width="100%" autoplay></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <img id="capturedImage" class="img-fluid mt-2" style="display: none;">
+                </div>
+                <div id="status-message" class="alert alert-info d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="captureBtn">Chụp ảnh</button>
+                <button type="button" class="btn btn-primary d-none" id="submitBtn">Gửi</button>
+                <button type="button" class="btn btn-danger d-none" id="retakeBtn">Chụp lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+    <script src="{% static 'js/attendance.js' %}"></script>
+{% endblock %}
 {% endblock %}

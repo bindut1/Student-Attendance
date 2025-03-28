@@ -4,46 +4,64 @@ from datetime import datetime
 from attendance.models import Account, Course
 from courses.models import ClassSchedule
 from django.shortcuts import get_object_or_404
-    
+from attendance.models import Attendance
+from datetime import datetime, timedelta
+from django.utils import timezone
+
 @login_required
 def student_schedule(request, account_id):
-    student = request.user
-
-    current_day = datetime.now().strftime('%A')
-
-    # Lay luon du lieu cua FK, tranh truy van nhieu lan
-    schedules = ClassSchedule.objects.filter(
-        student_id=student.account_id
-    ).select_related('course')
+    student = get_object_or_404(Account, account_id=account_id)
+    
+    current_datetime = timezone.now()
+    current_day_name = current_datetime.strftime('%A')
+    current_date = current_datetime.date()
+    current_time = current_datetime.time()
+    
+    schedules = ClassSchedule.objects.filter(student=student)
 
     courses_today = []
     for schedule in schedules:
         course = schedule.course
-        if current_day.lower() in course.weekdays.lower():
+        if current_day_name.lower() in course.weekdays.lower():
+            is_attended = Attendance.objects.filter(
+                student=student,
+                course=course,
+                check_in_date=current_date
+            ).exists()
+            
+            start_time = datetime.strptime(str(course.start_time), '%H:%M:%S').time()
+            limit_time = (datetime.combine(datetime.today(), start_time) + timedelta(minutes=10)).time()
+            
+            is_late = current_time > limit_time
+            
             courses_today.append({
+                'course_id': course.course_id,
                 'course_name': course.course_name,
                 'start_time': course.start_time,
                 'end_time': course.end_time,
                 'room': course.room,
-                'weekdays': course.weekdays
+                'weekdays': course.weekdays,
+                'is_attended': is_attended,
+                'is_late': is_late
             })
+    
     context = {
         'student': student,
         'courses_today': courses_today,
-        'current_day': current_day
+        'current_day': current_day_name
     }
     return render(request, 'student/schedule.html', context)
 
 @login_required
 def instructor_schedule(request, account_id):
     instructor = get_object_or_404(Account, account_id=account_id)
-    current_day = datetime.now().strftime('%A')  # ví dụ: 'Monday'
+    current_day = datetime.now().strftime('%A')  
 
     schedules = Course.objects.filter(instructor=instructor)
 
     courses_today = []
     for schedule in schedules:
-        if current_day.lower() in schedule.weekdays.lower():  # weekdays là "Monday, Wednesday"
+        if current_day.lower() in schedule.weekdays.lower():  
             courses_today.append({
                 'course_id': schedule.course_id,
                 'course_name': schedule.course_name,
@@ -63,8 +81,36 @@ def instructor_schedule(request, account_id):
 @login_required
 def student_list_by_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
-    students = ClassSchedule.objects.filter(course=course)
-    return render(request, 'templates/instructor/student_list.html', {
+    current_date = timezone.now().date()
+    schedules = ClassSchedule.objects.filter(course=course).select_related('student')
+    
+    students_data = []
+    attended_count = 0
+    
+    for schedule in schedules:
+        student = schedule.student
+        attendance = Attendance.objects.filter(
+            student=student,
+            course=course,
+            check_in_date=current_date
+        ).first()
+        is_attended = attendance is not None
+        if is_attended:
+            attended_count += 1
+        students_data.append({
+            'student': student,
+            'is_attended': is_attended,
+            'attendance': attendance 
+        })
+    
+    not_attended_count = len(students_data) - attended_count
+    
+    context = {
         'course': course,
-        'students': students
-    })
+        'students_data': students_data,
+        'current_date': current_date,
+        'attended_count': attended_count,
+        'not_attended_count': not_attended_count
+    }
+    
+    return render(request, 'instructor/student_list.html', context)

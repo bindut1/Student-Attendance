@@ -1,35 +1,70 @@
 import requests
 import logging
+import base64
 
 logger = logging.getLogger(__name__)
 
+
 class AIService:
-    """Service to interact with the AI facial recognition server"""
-    
-    def __init__(self, api_url=None):
-        self.api_url = api_url or 'https://3f48-2402-800-629c-32b9-d9a2-3c9f-431e-df1d.ngrok-free.app/ai/'
-    
+    # def __init__(self, api_url=None):
+    #     # Sẽ truyền link api vào sau
+    #     self.api_url = api_url or 'http://127.0.0.1:8000/face_recognition/api/facial_recognition/'
+    #     self.train_endpoint = 'train_faces'  # Endpoint cho training
+    #     self.verify_endpoint = 'verify_face'  # Endpoint cho xác minh nhận diện
+
     def send_images(self, account_id, image_files):
-        """Send images to AI server for processing
-        
-        Args:
-            account_id: The ID of the account
-            image_files: List of image files (from request.FILES)
-            
-        Returns:
-            dict: The response from the AI server
-        """
-        data = {'account_id': account_id}
+        data = {"account_id": account_id}
         files = []
 
         try:
             for img in image_files:
                 img.seek(0)
-                files.append(('images', (img.name, img.read(), img.content_type or 'image/jpeg')))
+                files.append(
+                    ("images", (img.name, img.read(), img.content_type or "image/jpeg"))
+                )
 
-            response = requests.post(self.api_url, data=data, files=files)
-            response.raise_for_status()  # Raise exception for 4XX/5XX responses
-            return response.json()
+            full_url = "https://fde0-2402-800-629c-c3e3-c6d-8d5-1ec6-fb82.ngrok-free.app/ai/create-image-features"
+            response = requests.post(full_url, data=data, files=files)
+
+            if response.status_code == 200:
+                return response.json()
+            else:
+                logger.error(
+                    f"AI server responded with {response.status_code}: {response.text}"
+                )
+                return {
+                    "success": False,
+                    "error": f"Server responded with {response.status_code}",
+                }
+
         except requests.RequestException as e:
             logger.error(f"Error connecting to AI server: {e}")
-            return {"error": str(e), "success": False}
+            return {"success": False, "error": str(e)}
+
+    def verify_face(self, image_data, account_id):
+        try:
+            if isinstance(image_data, str) and image_data.startswith("data:image"):
+                image_data = image_data.split(",")[1]
+            binary_image = base64.b64decode(image_data)
+            data = {"account_id": account_id}
+            files = {"image": ("image.jpg", binary_image, "image/jpeg")}
+            full_url = "https://fde0-2402-800-629c-c3e3-c6d-8d5-1ec6-fb82.ngrok-free.app/ai/face-recognization"
+            response = requests.post(full_url, data=data, files=files)
+            print("Response status:", response.status_code)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                logger.error(
+                    f"AI server responded with {response.status_code}: {response.text}"
+                )
+                return {
+                    "success": False,
+                    "error": f"Server responded with {response.status_code}",
+                }
+
+        except requests.RequestException as e:
+            logger.error(f"Error verifying face with AI server: {e}")
+            return {"success": False, "error": str(e)}
+        except Exception as e:
+            logger.error(f"Unexpected error in verify_face: {e}")
+            return {"success": False, "error": f"Lỗi xử lý: {str(e)}"}

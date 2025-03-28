@@ -14,4 +14,9 @@ urlpatterns = [
         views.instructor_schedule,
         name="instructor_schedule",
     ),
+    path(
+        "<int:course_id>/students-list/",
+        views.student_list_by_course,
+        name="student_list_by_course",
+    ),
 ]

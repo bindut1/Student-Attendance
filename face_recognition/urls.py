@@ -5,8 +5,13 @@ app_name = "face_recognition"
 
 urlpatterns = [
     path(
-        "student/<str:account_id>/upload-images/",
-        views.upload_and_send,
+        "student/<int:account_id>/upload-images/",
+        views.upload_training_images,
         name="student_upload_images",
+    ),
+    path(
+        "api/facial_recognition/",
+        views.verify_face_for_attendance,
+        name="facial_recognition_api",
     ),
 ]
