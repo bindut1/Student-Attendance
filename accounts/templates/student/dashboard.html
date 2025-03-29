@@ -1,0 +1,86 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Trang cá nhân{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar-wrapper">
+            <img src="{{ student.avatar|default:'/static/images/default-avatar.png' }}"
+                 alt="Avatar" class="profile-avatar">
+        </div>
+        <h2 class="profile-name">{{ student.full_name }}</h2>
+        <p class="profile-role">Sinh viên</p>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="card-header">
+                    <i class="fas fa-user-circle"></i>
+                    <h3>Thông Tin Cơ Bản</h3>
+                </div>
+                <div class="card-body">
+                    <div class="profile-item">
+                        <span class="item-label">Họ tên</span>
+                        <span class="item-value">{{ student.full_name }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Giới tính</span>
+                        <span class="item-value">{{ student.gender|yesno:"Nam,Nữ" }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Khoa</span>
+                        <span class="item-value">{{ student.faculty }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Lớp</span>
+                        <span class="item-value">{{ student.class_name }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <div class="card-header">
+                    <i class="fas fa-address-book"></i>
+                    <h3>Thông Tin Liên Hệ</h3>
+                </div>
+                <div class="card-body">
+                    <div class="profile-item">
+                        <span class="item-label">Email</span>
+                        <span class="item-value">{{ student.email }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Số điện thoại</span>
+                        <span class="item-value">{{ student.phone_number }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'accounts:student_edit' student.account_id %}" class="btn-edit">
+                <i class="fas fa-edit"></i> Chỉnh sửa thông tin
+            </a>
+        </div>
+
+        <form action="{% url 'face_recognition:student_upload_images' student.account_id %}" method="POST" enctype="multipart/form-data"
+              style="margin-top: 20px;">
+            {% csrf_token %}
+            <label for="imageUpload">Gửi ảnh nhận diện khuôn mặt:</label>
+            <input type="file" name="images" id="imageUpload" accept="image/*" multiple required>
+            <button type="submit" class="btn-upload">
+                <i class="fas fa-upload"></i> Gửi ảnh
+            </button>
+        </form>
+
+    </div>
+
+    {% if error %}
+    <div class="profile-error">
+        {{ error }}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Trang cá nhân{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar-wrapper">
+            <img src="{{ instructor.avatar|default:'/static/images/default-avatar.png' }}"
+                 alt="Avatar" class="profile-avatar">
+        </div>
+        <h2 class="profile-name">{{ instructor.full_name }}</h2>
+        <p class="profile-role">Giảng viên</p>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="card-header">
+                    <i class="fas fa-user-circle"></i>
+                    <h3>Thông Tin Cơ Bản</h3>
+                </div>
+                <div class="card-body">
+                    <div class="profile-item">
+                        <span class="item-label">Họ tên</span>
+                        <span class="item-value">{{ instructor.full_name }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Giới tính</span>
+                        <span class="item-value">{{ instructor.gender|yesno:"Nam,Nữ" }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Khoa</span>
+                        <span class="item-value">{{ instructor.faculty }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <div class="card-header">
+                    <i class="fas fa-address-book"></i>
+                    <h3>Thông Tin Liên Hệ</h3>
+                </div>
+                <div class="card-body">
+                    <div class="profile-item">
+                        <span class="item-label">Email</span>
+                        <span class="item-value">{{ instructor.email }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="item-label">Số điện thoại</span>
+                        <span class="item-value">{{ instructor.phone_number }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'accounts:instructor_edit' instructor.account_id %}" class="btn-edit">
+                <i class="fas fa-edit"></i> Chỉnh sửa thông tin
+            </a>
+        </div>
+    </div>
+
+    {% if error %}
+    <div class="profile-error">
+        {{ error }}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

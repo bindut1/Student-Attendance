@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang Chủ</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/">Student Portal</a>
+
+    <!-- Kiểm tra trạng thái đăng nhập -->
+    <div class="d-flex">
+      {% if user.is_authenticated %}
+        <!-- Dropdown khi đã đăng nhập -->
+        <div class="dropdown me-3">
+          <a
+            class="nav-link dropdown-toggle text-white"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fas fa-user"></i> {{ user.full_name }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+              <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+              </a>
+            </li>
+          </ul>
+        </div>
+      {% else %}
+        <!-- Nút đăng nhập khi chưa đăng nhập -->
+        <a href="{% url 'accounts:login' %}" class="btn btn-light">Đăng nhập</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="container py-4 text-center">
+  <h1 class="text-center">Chào mừng đến với hệ thống quản lý điểm danh</h1>
+  <p class="text-center">Quản lý lịch dạy, điểm danh và thông tin cá nhân một cách dễ dàng.</p>
+
+  <!-- Nút vào trang thông tin -->
+  <div class="d-flex justify-content-center">
+    {% if user.is_authenticated %}
+      {% if user.role == "instructor" %}
+        <a href="{% url 'accounts:instructor_info' %}" class="btn btn-primary me-2">Vào trang thông tin</a>
+      {% elif user.role == "student" %}
+        <a href="{% url 'accounts:student_info' %}" class="btn btn-primary me-2">Vào trang thông tin</a>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

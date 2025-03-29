@@ -1,0 +1,80 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Danh sách sinh viên - {{ course.course_name }}</h3>
+        <div class="text-muted">Ngày: {{ current_date|date:"d/m/Y" }}</div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between">
+                <span>Thông tin môn học:</span>
+                <span>{{ course.weekdays }} | {{ course.start_time|slice:":5" }} - {{ course.end_time|slice:":5" }}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <p><strong>Giảng viên:</strong> {{ course.instructor.full_name }}</p>
+            <p><strong>Phòng học:</strong> {{ course.room }}</p>
+            <p><strong>Thống kê:</strong> 
+                <span class="badge bg-success">Đã điểm danh: {{ attended_count }}</span>
+                <span class="badge bg-danger">Chưa điểm danh: {{ not_attended_count }}</span>
+            </p>
+        </div>
+    </div>
+
+    {% if students_data %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-success text-center">
+            <tr>
+                <th>#</th>
+                <th>Mã sinh viên</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Lớp</th>
+                <th>Trạng thái điểm danh</th>
+                <th>Thời gian</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in students_data %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td>{{ item.student.account_id }}</td>
+                <td>{{ item.student.full_name }}</td>
+                <td>{{ item.student.email }}</td>
+                <td>{{ item.student.class_name|default:"-" }}</td>
+                <td class="text-center">
+                    {% if item.is_attended %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-check-circle me-1"></i> Đã điểm danh
+                        </span>
+                    {% else %}
+                        <span class="badge bg-danger">
+                            <i class="fas fa-times-circle me-1"></i> Chưa điểm danh
+                        </span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.is_attended and item.attendance %}
+                        {{ item.attendance.check_in_time|time:"H:i" }}
+                    {% else %}
+                        --:--
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Chưa có sinh viên nào trong lớp học này.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

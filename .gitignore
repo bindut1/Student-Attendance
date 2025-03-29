@@ -1,0 +1,6 @@
+.env
+.venv
+.idea
+*.pyc
+__pycache__/
+student_attendance/settings.py
