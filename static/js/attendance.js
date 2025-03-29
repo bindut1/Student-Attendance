@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 video.srcObject = mediaStream;
                 video.play();
 
-                // Reset UI
                 capturedImage.style.display = 'none';
                 video.style.display = 'block';
                 captureBtn.classList.remove('d-none');
@@ -121,17 +120,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (studentIndex !== -1 && pathParts.length > studentIndex + 1) {
             currentAccountId = pathParts[studentIndex + 1];
         }
-
         const imageData = canvas.toDataURL('image/png');
-
         try {
             const viTri = await layViTriNguoiDung();
 
-            fetch('/face_recognition/api/facial_recognition/', {  
+            fetch('/face_recognition/api/facial_recognition/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
                     image: imageData,
@@ -183,18 +179,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 });
