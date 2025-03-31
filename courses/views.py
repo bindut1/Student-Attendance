@@ -12,10 +12,12 @@ from django.utils import timezone
 def student_schedule(request, account_id):
     student = get_object_or_404(Account, account_id=account_id)
     
-    current_datetime = timezone.now()
+    current_datetime = datetime.now()
     current_day_name = current_datetime.strftime('%A')
     current_date = current_datetime.date()
     current_time = current_datetime.time()
+    # print(current_date)
+    print(current_time)
     
     schedules = ClassSchedule.objects.filter(student=student)
 
@@ -30,19 +32,19 @@ def student_schedule(request, account_id):
             ).exists()
             
             start_time = datetime.strptime(str(course.start_time), '%H:%M:%S').time()
-            limit_time = (datetime.combine(datetime.today(), start_time) + timedelta(minutes=10)).time()
+            end_time = datetime.strptime(str(course.end_time), '%H:%M:%S').time()
             
-            is_late = current_time > limit_time
-            
+            can_attend = start_time <= current_time <= end_time and not is_attended
+            # print(can_attend)
             courses_today.append({
                 'course_id': course.course_id,
                 'course_name': course.course_name,
-                'start_time': course.start_time,
-                'end_time': course.end_time,
+                'start_time': course.start_time.strftime('%H:%M'),  
+                'end_time': course.end_time.strftime('%H:%M'),      
                 'room': course.room,
                 'weekdays': course.weekdays,
                 'is_attended': is_attended,
-                'is_late': is_late
+                'can_attend': can_attend
             })
     
     context = {
@@ -65,8 +67,8 @@ def instructor_schedule(request, account_id):
             courses_today.append({
                 'course_id': schedule.course_id,
                 'course_name': schedule.course_name,
-                'start_time': schedule.start_time,
-                'end_time': schedule.end_time,
+                'start_time': schedule.start_time.strftime('%H:%M'),  
+                'end_time': schedule.end_time.strftime('%H:%M'),      
                 'room': schedule.room,
                 'weekdays': schedule.weekdays
             })

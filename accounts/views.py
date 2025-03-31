@@ -82,21 +82,18 @@ def student_edit(request, account_id):
     else:
         form = FormHelper(instance=student)
 
-    return render(
-        request, "student/edit.html", {"form": form, "student": student}
-    )
+    return render(request, "student/edit.html", {"form": form, "student": student})
 
 
 @login_required
 def student_search(request):
     query = request.GET.get("q", "").strip()
-    students = Account.objects.filter(role="student")
-
+    students = None
     if query:
-        students = students.filter(
-            models.Q(email__icontains=query) | models.Q(full_name__icontains=query)
+        students = Account.objects.filter(
+            models.Q(full_name__icontains=query) | models.Q(email__icontains=query),
+            role="student",
         )
-
     return render(
         request, "student/search.html", {"students": students, "query": query}
     )
@@ -153,11 +150,11 @@ def instructor_edit(request, account_id):
 
 @login_required
 def instructor_search(request):
-    query = request.GET.get("q")
+    query = request.GET.get("q", "").strip()
     users = None
     if query:
-        users = Account.objects.filter(full_name__icontains=query)
+        users = Account.objects.filter(
+            models.Q(full_name__icontains=query) | models.Q(email__icontains=query),
+        )
 
-    return render(
-        request, "instructor/search.html", {"users": users, "query": query}
-    )
+    return render(request, "instructor/search.html", {"users": users, "query": query})
