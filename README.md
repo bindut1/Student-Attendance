@@ -37,7 +37,7 @@ A comprehensive web application for managing student attendance using facial rec
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/Student-Attendance.git
+https://github.com/bindut1/Student-Attendance.git
 cd Student-Attendance
 ```
 
