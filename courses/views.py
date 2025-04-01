@@ -106,9 +106,12 @@ def student_list_by_course(request, course_id):
         })
     
     not_attended_count = len(students_data) - attended_count
-    
+    start_time = course.start_time.strftime('%H:%M')
+    end_time = course.end_time.strftime('%H:%M')
     context = {
         'course': course,
+        'start_time': start_time,
+        'end_time': end_time,
         'students_data': students_data,
         'current_date': current_date,
         'attended_count': attended_count,

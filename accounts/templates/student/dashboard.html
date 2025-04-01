@@ -1,217 +1,198 @@
-{% extends 'layouts/base.html' %}
-
-{% block title %}Trang cá nhân{% endblock %}
-
+{% extends 'layouts/base.html' %} {% block title %}Trang cá nhân{% endblock %}
 {% block content %}
-<div class="profile-container">
-    <div class="profile-header">
-        <div class="profile-avatar-wrapper">
-            <img src="{{ student.avatar|default:'/static/images/default-avatar.png' }}" alt="Avatar"
-                class="profile-avatar">
-        </div>
-        <h2 class="profile-name">{{ student.full_name }}</h2>
-        <p class="profile-role">Sinh viên</p>
-    </div>
 
-    <div class="profile-content">
-        <div class="profile-grid">
-            <div class="profile-card">
-                <div class="card-header">
-                    <i class="fas fa-user-circle"></i>
-                    <h3>Thông Tin Cơ Bản</h3>
-                </div>
-                <div class="card-body">
-                    <div class="profile-item">
-                        <span class="item-label">Họ tên</span>
-                        <span class="item-value">{{ student.full_name }}</span>
-                    </div>
-                    <div class="profile-item">
-                        <span class="item-label">Giới tính</span>
-                        <span class="item-value">{{ student.gender|yesno:"Nam,Nữ" }}</span>
-                    </div>
-                    <div class="profile-item">
-                        <span class="item-label">Khoa</span>
-                        <span class="item-value">{{ student.faculty }}</span>
-                    </div>
-                    <div class="profile-item">
-                        <span class="item-label">Lớp</span>
-                        <span class="item-value">{{ student.class_name }}</span>
-                    </div>
+<div class="container">
+    <div class="card shadow p-3 px-5">
+        <div class="row text-center g-3">
+            <div class="col-md-4">
+                <div class="stat-box">
+                    <i class="fa-solid fa-graduation-cap"></i> GPA 8.5
                 </div>
             </div>
-
-            <div class="profile-card">
-                <div class="card-header">
-                    <i class="fas fa-address-book"></i>
-                    <h3>Thông Tin Liên Hệ</h3>
-                </div>
-                <div class="card-body">
-                    <div class="profile-item">
-                        <span class="item-label">Email</span>
-                        <span class="item-value">{{ student.email }}</span>
-                    </div>
-                    <div class="profile-item">
-                        <span class="item-label">Số điện thoại</span>
-                        <span class="item-value">{{ student.phone_number }}</span>
-                    </div>
+            <div class="col-md-4">
+                <div class="stat-box">
+                    <i class="fa-solid fa-user-check"></i> Attendance 85%
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="stat-box"><i class="fa-solid fa-coins"></i> RL 85</div>
+            </div>
         </div>
-
-        <div class="profile-actions">
-            <a href="{% url 'accounts:student_edit' student.account_id %}" class="btn-primary">
-                <i class="fas fa-edit"></i> Chỉnh sửa thông tin
-            </a>
-        </div>
-
-        <div class="upload-section">
-            <h3><i class="fas fa-camera"></i> Ảnh nhận diện khuôn mặt</h3>
-            <form action="{% url 'face_recognition:student_upload_images' student.account_id %}" method="POST"
-                enctype="multipart/form-data" class="upload-form">
-                {% csrf_token %}
-                <div class="file-upload-container">
-                    <div class="file-upload-area">
-                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                        <p>Kéo và thả ảnh hoặc nhấn để chọn</p>
-                        <span class="selected-files"></span>
-                        <input type="file" name="images" id="imageUpload" accept="image/*" multiple required
-                            class="file-input">
-                    </div>
-                </div>
-                <button type="submit" class="btn-upload">
-                    <i class="fas fa-upload"></i> Gửi ảnh
-                </button>
-            </form>
-        </div>
-
-        {% if error %}
-        <div class="alert alert-danger">
-            <i class="fas fa-exclamation-circle"></i>
-            <span>{{ error }}</span>
-        </div>
-        {% endif %}
     </div>
 
-    <style>
-        .btn-primary {
-            background: #4a6cf7;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+    <div class="profile-row mt-3">
+        <div class="profile-column text-center d-flex justify-content-center align-items-center flex-column">
+            <div class="profile-avatar-wrapper">
+                <img src="{{ student.avatar|default:'/static/images/default-avatar.png' }}" alt="Avatar"
+                    class="profile-avatar" />
+            </div>
+            <h3>{{ student.full_name }}</h3>
+            <p>Sinh viên</p>
+        </div>
+        <div class="profile-column">
+            <h5 class="card-title text-center mb-3">Thông tin sinh viên</h5>
+            <p><strong>Họ tên:</strong> {{ student.full_name }}</p>
+            <p><strong>Giới tính:</strong> {{ student.gender|yesno:"Nam,Nữ" }}</p>
+            <p><strong>Khoa:</strong> {{ student.faculty }}</p>
+            <p><strong>Lớp:</strong> {{ student.class_name }}</p>
+            <p><strong>Email:</strong> {{ student.email }}</p>
+            <p><strong>Số điện thoại:</strong> {{ student.phone_number }}</p>
+            <div class="text-center mt-3">
+                <a href="{% url 'accounts:student_edit' student.account_id %}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Chỉnh sửa thông tin
+                </a>
+            </div>
+        </div>
+    </div>
 
-        .btn-primary:hover {
-            background: #3a5ce5;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
+    <div class="upload-section">
+        <h3><i class="fas fa-camera"></i> Ảnh nhận diện khuôn mặt</h3>
+        <form action="{% url 'face_recognition:student_upload_images' student.account_id %}" method="POST"
+            enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            <div class="file-upload-container">
+                <div class="file-upload-area">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p>Kéo và thả ảnh hoặc nhấn để chọn</p>
+                    <span class="selected-files"></span>
+                    <input type="file" name="images" id="imageUpload" accept="image/*" multiple required
+                        class="file-input">
+                </div>
+            </div>
+            <button type="submit" class="btn-upload">
+                <i class="fas fa-upload"></i> Gửi ảnh
+            </button>
+        </form>
+    </div>
 
-        .upload-section {
-            margin-top: 30px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
+    {% if error %}
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ error }}</span>
+    </div>
+    {% endif %}
+</div>
 
-        .upload-section h3 {
-            margin-top: 0;
-            color: #333;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+<style>
+    .btn-primary {
+        background: #4a6cf7;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-        .file-upload-container {
-            margin: 15px 0;
-        }
+    .btn-primary:hover {
+        background: #3a5ce5;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
 
-        .file-upload-area {
-            border: 2px dashed #ccc;
-            border-radius: 6px;
-            padding: 30px 20px;
-            text-align: center;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: white;
-        }
+    .upload-section {
+        margin-top: 30px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
 
-        .file-upload-area:hover {
-            border-color: #4a6cf7;
-        }
+    .upload-section h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-        .upload-icon {
-            font-size: 2rem;
-            color: #4a6cf7;
-            margin-bottom: 10px;
-        }
+    .file-upload-container {
+        margin: 15px 0;
+    }
 
-        .file-input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
+    .file-upload-area {
+        border: 2px dashed #ccc;
+        border-radius: 6px;
+        padding: 30px 20px;
+        text-align: center;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: white;
+    }
 
-        .selected-files {
-            display: block;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: #666;
-        }
+    .file-upload-area:hover {
+        border-color: #4a6cf7;
+    }
 
-        .btn-upload {
-            background: #4a6cf7;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0 auto;
-            transition: all 0.3s;
-        }
+    .upload-icon {
+        font-size: 2rem;
+        color: #4a6cf7;
+        margin-bottom: 10px;
+    }
 
-        .btn-upload:hover {
-            background: #3a5ce5;
-            transform: translateY(-2px);
-        }
+    .file-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
 
-        .alert {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .selected-files {
+        display: block;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #666;
+    }
 
-        .alert-danger {
-            background-color: #fee;
-            border-left: 4px solid #e74c3c;
-            color: #c0392b;
-        }
-    </style>
+    .btn-upload {
+        background: #4a6cf7;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 4px;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 auto;
+        transition: all 0.3s;
+    }
 
-    <script>
-        document.getElementById('imageUpload').addEventListener('change', function (e) {
-            const fileCount = e.target.files.length;
-            document.querySelector('.selected-files').textContent =
-                fileCount > 0 ? `Đã chọn ${fileCount} tệp` : '';
-        });
-    </script>
-    {% endblock %}
+    .btn-upload:hover {
+        background: #3a5ce5;
+        transform: translateY(-2px);
+    }
+
+    .alert {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .alert-danger {
+        background-color: #fee;
+        border-left: 4px solid #e74c3c;
+        color: #c0392b;
+    }
+</style>
+
+<script>
+    document.getElementById('imageUpload').addEventListener('change', function (e) {
+        const fileCount = e.target.files.length;
+        document.querySelector('.selected-files').textContent =
+            fileCount > 0 ? `Đã chọn ${fileCount} tệp` : '';
+    });
+</script>
+{% endblock %}

@@ -12,7 +12,7 @@
         <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between">
                 <span>Thông tin môn học:</span>
-                <span>{{ course.weekdays }} | {{ course.start_time|slice:":5" }} - {{ course.end_time|slice:":5" }}</span>
+                <span>{{ course.weekdays }} | {{ start_time|slice:":5" }} - {{ end_time|slice:":5" }}</span>
             </div>
         </div>
         <div class="card-body">
@@ -30,7 +30,7 @@
         <table class="table table-bordered table-hover">
             <thead class="table-success text-center">
             <tr>
-                <th>#</th>
+                <th>STT</th>
                 <th>Mã sinh viên</th>
                 <th>Họ tên</th>
                 <th>Email</th>
