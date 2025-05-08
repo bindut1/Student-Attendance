@@ -22,7 +22,7 @@ class AIService:
                     ("images", (img.name, img.read(), img.content_type or "image/jpeg"))
                 )
 
-            full_url = "https://8a51-2402-800-629c-c3e3-547f-a20c-62d7-e2ee.ngrok-free.app/ai/create-image-features"
+            full_url = "https://16da-117-2-255-206.ngrok-free.app/ai/create-image-features"
             response = requests.post(full_url, data=data, files=files)
 
             if response.status_code == 200:
@@ -47,7 +47,7 @@ class AIService:
             binary_image = base64.b64decode(image_data)
             data = {"account_id": account_id}
             files = {"image": ("image.jpg", binary_image, "image/jpeg")}
-            full_url = "https://8a51-2402-800-629c-c3e3-547f-a20c-62d7-e2ee.ngrok-free.app/ai/face-recognization"
+            full_url = "https://16da-117-2-255-206.ngrok-free.app/ai/face-recognization"
             response = requests.post(full_url, data=data, files=files)
             print("Response status:", response.status_code)
             if response.status_code == 200:

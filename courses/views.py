@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from attendance.models import Attendance
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.http import HttpResponse
+import xlwt  # You may need to install this package: pip install xlwt
 
 @login_required
 def student_schedule(request, account_id):
@@ -119,3 +121,92 @@ def student_list_by_course(request, course_id):
     }
     
     return render(request, 'instructor/student_list.html', context)
+
+@login_required
+def export_attendance(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    current_date = timezone.now().date()
+    schedules = ClassSchedule.objects.filter(course=course).select_related('student')
+    
+    wb = xlwt.Workbook(encoding='utf-8')
+    
+    worksheet_name = f'Attendance-{course.course_id}' 
+    ws = wb.add_sheet(worksheet_name)
+    
+    title_style = xlwt.easyxf('font: bold on, height 280; align: wrap on, vert centre, horiz center;')
+    ws.write_merge(0, 0, 0, 4, f"Attendance for: {course.course_name}", title_style)
+    
+    header_style = xlwt.easyxf('font: bold on; align: wrap on, vert centre, horiz center; pattern: pattern solid, fore_color light_blue;')
+    date_style = xlwt.easyxf(num_format_str='DD-MM-YYYY')
+    time_style = xlwt.easyxf(num_format_str='HH:MM:SS')
+    attended_style = xlwt.easyxf('pattern: pattern solid, fore_color light_green;')
+    not_attended_style = xlwt.easyxf('pattern: pattern solid, fore_color light_yellow;')
+    
+    headers = ['STT', 'Student ID', 'Full Name', 'Status', 'Check-in Time']
+    col_width = [1500, 4000, 8000, 4000, 4000]
+    
+    for i, width in enumerate(col_width):
+        ws.col(i).width = width
+    
+    for col, header in enumerate(headers):
+        ws.write(1, col, header, header_style)
+    
+    row = 2
+    for schedule in schedules:
+        student = schedule.student
+        attendance = Attendance.objects.filter(
+            student=student,
+            course=course,
+            check_in_date=current_date
+        ).first()
+        
+        is_attended = attendance is not None
+        status = 'Đã điểm danh' if is_attended else 'Chưa điểm danh'
+        
+        ws.write(row, 0, row-1)  
+        ws.write(row, 1, student.account_id)
+        
+        if hasattr(student, 'name'):
+            student_name = student.name
+        elif hasattr(student, 'full_name'):
+            student_name = student.full_name
+        elif hasattr(student, 'username'):
+            student_name = student.username
+        else:
+            student_name = f"Student {student.account_id}"
+        
+        ws.write(row, 2, student_name)
+        
+        if is_attended:
+            ws.write(row, 3, status, attended_style)
+            ws.write(row, 4, attendance.check_in_time.strftime('%H:%M:%S'), time_style)
+        else:
+            ws.write(row, 3, status, not_attended_style)
+            ws.write(row, 4, '')
+        
+        row += 1
+    
+    attended_count = Attendance.objects.filter(
+        course=course,
+        check_in_date=current_date
+    ).count()
+    
+    total_students = schedules.count()
+    not_attended_count = total_students - attended_count
+    
+    row += 1
+    ws.write(row, 0, 'Summary', header_style)
+    ws.write(row, 1, f'Total: {total_students}')
+    ws.write(row, 2, f'Attended: {attended_count}', attended_style)
+    ws.write(row, 3, f'Absent: {not_attended_count}', not_attended_style)
+    
+    row += 1
+    ws.write(row, 0, 'Date:', header_style)
+    ws.write(row, 1, current_date.strftime('%Y-%m-%d'), date_style)
+    
+    response = HttpResponse(content_type='application/ms-excel')
+    filename = f'attendance_{course.course_id}_{current_date.strftime("%Y-%m-%d")}.xls'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    
+    return response

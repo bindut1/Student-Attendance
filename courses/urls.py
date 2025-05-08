@@ -19,4 +19,9 @@ urlpatterns = [
         views.student_list_by_course,
         name="student_list_by_course",
     ),
+    path(
+        "<int:course_id>/export-attendance/",
+        views.export_attendance,
+        name="export_attendance",
+    ),
 ]

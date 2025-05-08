@@ -59,6 +59,15 @@
                         class="file-input">
                 </div>
             </div>
+            <div> 
+                {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
             <button type="submit" class="btn-upload">
                 <i class="fas fa-upload"></i> Gửi ảnh
             </button>

@@ -33,8 +33,11 @@
                 <td class="text-center">
                     <a href="{% url 'courses:student_list_by_course' course.course_id %}">Xem</a>
                 </td>
-                <td class="text-center">Xuất</td>
-
+                <td class="text-center">
+                    <a href="{% url 'courses:export_attendance' course.course_id %}" class="btn btn-sm btn-success">
+                        <i class="fas fa-file-excel me-1"></i>Xuất Excel
+                    </a>
+                </td>
             </tr>
             {% endfor %}
             </tbody>

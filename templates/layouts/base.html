@@ -200,7 +200,11 @@
                 </a>
             </li>
             <li>
-                <a href="#"><i class="fa-solid fa-book me-1"></i>Bài tập</a>
+                {% if user.role == 'student' %}
+                <a href="{% url 'attendance:history' account_id=user.account_id %}" class="nav-link me-3">
+                    <i class="fas fa-history"></i> Lịch sử điểm danh
+                </a>
+                {% endif %}
             </li>
             <li>
                 <a href="#"><i class="fa-solid fa-square-poll-horizontal me-1"></i>Kết quả học

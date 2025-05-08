@@ -6,7 +6,8 @@ import json
 from attendance.models import Course, Attendance, Account
 from datetime import datetime
 import math
-
+from django.shortcuts import redirect
+from django.contrib import messages
 
 @require_POST
 def upload_training_images(request, account_id):
@@ -14,26 +15,20 @@ def upload_training_images(request, account_id):
     try:
         image_files = request.FILES.getlist("images")
         if not image_files:
-            return JsonResponse(
-                {"success": False, "message": "Không có ảnh nào được gửi"}, status=400
-            )
+            messages.error(request, "Không có ảnh nào được gửi.")
+            return redirect("accounts:student_info")  
+
         response = ai_service.send_images(account_id, image_files)
-        if response.get("success"):
-            return JsonResponse(
-                {"success": True, "message": "Đã tải lên và xử lý khuôn mặt thành công"}
-            )
+        if response.get("message"):
+            messages.success(request, "Đã tải lên và xử lý khuôn mặt thành công.")
         else:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": f"Gửi ảnh thất bại: {response.get('error', 'Lỗi không xác định')}",
-                },
-                status=500,
-            )
+            error_message = response.get("error", "Lỗi không xác định")
+            messages.error(request, f"Gửi ảnh thất bại: {error_message}")
+
+        return redirect("accounts:student_info") 
     except Exception as e:
-        return JsonResponse(
-            {"success": False, "message": f"Lỗi khi gửi ảnh: {str(e)}"}, status=500
-        )
+        messages.error(request, f"Lỗi khi gửi ảnh: {str(e)}")
+        return redirect("accounts:student_info")  
 
 
 # Hàm tính khoảng cách giữa hai tọa độ sử dụng công thức Haversine
@@ -101,7 +96,7 @@ def verify_face_for_attendance(request):
             bach_khoa_lat = 16.073844
             bach_khoa_lon = 108.149409
 
-            khoang_cach_toi_da = 3000000
+            khoang_cach_toi_da = 3000
 
             khoang_cach = tinh_khoang_cach(
                 float(latitude), float(longitude), bach_khoa_lat, bach_khoa_lon
