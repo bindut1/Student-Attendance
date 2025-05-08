@@ -37,14 +37,14 @@ A comprehensive web application for managing student attendance using facial rec
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/Student-Attendance.git
+https://github.com/bindut1/Student-Attendance.git
 cd Student-Attendance
 ```
 
 2. Create a virtual environment and activate it:
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows, use: venv\Scripts\activate
+./venv/bin/activate  
 ```
 
 3. Install dependencies:
