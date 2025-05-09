@@ -210,3 +210,68 @@ def export_attendance(request, course_id):
     wb.save(response)
     
     return response
+
+@login_required
+def student_schedule_week(request, account_id):
+    student = get_object_or_404(Account, account_id=account_id)
+    current_date = timezone.now().date()
+    # lấy thứ 2 của tuần hiện tại
+    start_of_week = current_date - timedelta(days=current_date.weekday()) 
+    week_dates = [start_of_week + timedelta(days=i) for i in range(7)]  
+
+    schedules = ClassSchedule.objects.filter(student=student).select_related('course')
+    weekly_schedule = []
+
+    for date in week_dates:
+        day_name = date.strftime('%A')
+        daily_courses = []
+        for schedule in schedules:
+            course = schedule.course
+            if day_name.lower() in course.weekdays.lower():
+                daily_courses.append({
+                    'course_id': course.course_id,
+                    'course_name': course.course_name,
+                    'start_time': course.start_time.strftime('%H:%M'),
+                    'end_time': course.end_time.strftime('%H:%M'),
+                    'room': course.room,
+                    'weekdays': course.weekdays,
+                })
+        weekly_schedule.append({'date': date, 'day_name': day_name, 'courses': daily_courses})
+
+    context = {
+        'student': student,
+        'weekly_schedule': weekly_schedule,
+    }
+    return render(request, 'student/schedule_week.html', context)
+
+
+@login_required
+def instructor_schedule_week(request, account_id):
+    instructor = get_object_or_404(Account, account_id=account_id)
+    current_date = timezone.now().date()
+    start_of_week = current_date - timedelta(days=current_date.weekday()) 
+    week_dates = [start_of_week + timedelta(days=i) for i in range(7)]  
+
+    schedules = Course.objects.filter(instructor=instructor)
+    weekly_schedule = []
+
+    for date in week_dates:
+        day_name = date.strftime('%A')
+        daily_courses = []
+        for schedule in schedules:
+            if day_name.lower() in schedule.weekdays.lower():
+                daily_courses.append({
+                    'course_id': schedule.course_id,
+                    'course_name': schedule.course_name,
+                    'start_time': schedule.start_time.strftime('%H:%M'),
+                    'end_time': schedule.end_time.strftime('%H:%M'),
+                    'room': schedule.room,
+                    'weekdays': schedule.weekdays,
+                })
+        weekly_schedule.append({'date': date, 'day_name': day_name, 'courses': daily_courses})
+
+    context = {
+        'instructor': instructor,
+        'weekly_schedule': weekly_schedule,
+    }
+    return render(request, 'instructor/schedule_week.html', context)

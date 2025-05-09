@@ -1,0 +1,52 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Lịch dạy trong tuần</h2>
+    <table class="table table-bordered">
+        <thead class="table-primary text-center">
+            <tr>
+                <th>Thứ</th>
+                <th>Ngày</th>
+                <th>Môn học</th>
+                <th>Thời gian</th>
+                <th>Phòng</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in weekly_schedule %}
+            <tr>
+                <td class="text-center">{{ day.day_name }}</td>
+                <td class="text-center">{{ day.date|date:"d/m/Y" }}</td>
+                <td>
+                    {% if day.courses %}
+                        {% for course in day.courses %}
+                            <strong>{{ course.course_name }}</strong>
+                        {% endfor %}
+                    {% else %}
+                    <span class="text-muted"><i>Không có lịch dạy</i></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if day.courses %}
+                        {% for course in day.courses %}
+                            {{ course.start_time }} - {{ course.end_time }}
+                        {% endfor %}
+                    {% else %}
+                    <span class="text-muted">--:--</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if day.courses %}
+                        {% for course in day.courses %}
+                            {{ course.room }}
+                        {% endfor %}
+                    {% else %}
+                    <span class="text-muted"><i>Không có</i></span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
