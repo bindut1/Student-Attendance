@@ -5,10 +5,9 @@ from attendance.models import Attendance
 from courses.models import Course
 from datetime import timedelta
 import json
-from django.core.mail import send_mail
-from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
+from core.helpers.email_helper import send_absence_warning_email
 
 
 @login_required
@@ -129,11 +128,8 @@ def attendance_statistic_detail(request, course_id):
 def send_warning_email(request, student_id, course_id):
     student = get_object_or_404(Account, account_id=student_id, role='student')
     course = get_object_or_404(Course, course_id=course_id)
-
-    subject = f"Cảnh cáo vắng mặt môn học {course.course_name}"
-    message = f"Chào {student.full_name},\n\nBạn đã vắng mặt quá 3 buổi học trong môn {course.course_name}. Vui lòng liên hệ giảng viên để giải quyết.\n\nTrân trọng."
-    recipient_list = [student.email]
-
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
-    messages.success(request, f"Đã gửi email cảnh cáo đến {student.full_name}.")
+    if send_absence_warning_email(student, course):
+        messages.success(request, f"Đã gửi email cảnh cáo đến {student.full_name}.")
+    else:
+        messages.error(request, f"Không thể gửi email cảnh cáo đến {student.full_name}.")
     return redirect('attendance:statistic', account_id=request.user.account_id)
