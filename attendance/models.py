@@ -10,4 +10,3 @@ class Attendance(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     check_in_latitude = models.FloatField(null=True, blank=True)
     check_in_longitude = models.FloatField(null=True, blank=True)
-    status = models.BooleanField(default=False)
