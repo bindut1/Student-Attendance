@@ -1,0 +1,28 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Thống kê điểm danh</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>Môn học</th>
+                    <th>Thống kê</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in statistics_data %}
+                <tr>
+                    <td>{{ course.course_name }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'attendance:statistic_detail' course.course_id %}" class="btn btn-info">
+                            Xem chi tiết
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

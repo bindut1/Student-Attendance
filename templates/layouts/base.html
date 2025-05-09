@@ -218,9 +218,11 @@
                 </a>
                 {% endif %}
             </li>
-            <li>
-                <a href="#"><i class="fa-solid fa-comment me-1"></i>Trò chuyện</a>
-            </li>
+            {% if user.role == 'instructor' %}
+                <li>
+                    <a href="{% url 'attendance:statistic' account_id=user.account_id %}"><i class="fa-solid fa-comment me-1"></i>Thống kê</a>
+                </li>
+            {% endif %}
             <li>
                 <a href="#"><i class="fa-solid fa-gear me-1"></i>Cài đặt</a>
             </li>
