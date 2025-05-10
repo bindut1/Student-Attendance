@@ -108,23 +108,6 @@ python manage.py runserver
 - `templates/`: HTML templates
 - `student_attendance/`: Project settings
 
-## Usage
-
-### Admin
-- Access the admin panel at http://127.0.0.1:8000/admin/
-- Create courses, instructors, and student accounts
-
-### Student
-- Log in with your credentials
-- View your schedule
-- Use the camera icon to mark attendance using facial recognition
-- View your attendance history
-
-### Instructor
-- Log in with your credentials
-- View your teaching schedule
-- View and monitor student attendance for your courses
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
