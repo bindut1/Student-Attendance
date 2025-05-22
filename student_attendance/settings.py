@@ -102,10 +102,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'student_attendance',
-        'USER': 'root',
-        'PASSWORD': 'bindut.1',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'USER': 'avnadmin',
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
