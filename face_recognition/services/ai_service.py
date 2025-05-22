@@ -6,11 +6,6 @@ logger = logging.getLogger(__name__)
 
 
 class AIService:
-    # def __init__(self, api_url=None):
-    #     self.api_url = api_url or 'http://127.0.0.1:8000/face_recognition/api/facial_recognition/'
-    #     self.train_endpoint = 'train_faces'  # Endpoint cho training
-    #     self.verify_endpoint = 'verify_face'  # Endpoint cho xác minh nhận diện
-
     def send_images(self, account_id, image_files):
         data = {"account_id": account_id}
         files = []
@@ -47,7 +42,7 @@ class AIService:
             binary_image = base64.b64decode(image_data)
             data = {"account_id": account_id}
             files = {"image": ("image.jpg", binary_image, "image/jpeg")}
-            full_url = "https://16da-117-2-255-206.ngrok-free.app/ai/face-recognization"
+            full_url = "https://33c8-2402-800-629c-904b-a814-c872-6722-353.ngrok-free.app/ai/face-recognization"
             response = requests.post(full_url, data=data, files=files)
             print("Response status:", response.status_code)
             if response.status_code == 200:

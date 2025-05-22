@@ -23,6 +23,7 @@
                             data-details="{{ week.details }}">
                             <i class="fas fa-check-circle"></i>
                         </a>
+                        {% elif week.is_future %}
                         {% else %}
                         <span class="text-danger"><i class="fas fa-times-circle"></i></span>
                         {% endif %}

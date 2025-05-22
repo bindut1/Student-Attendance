@@ -8,7 +8,7 @@ from attendance.models import Attendance
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.http import HttpResponse
-import xlwt  # You may need to install this package: pip install xlwt
+import xlwt  
 
 @login_required
 def student_schedule(request, account_id):
@@ -19,7 +19,7 @@ def student_schedule(request, account_id):
     current_date = current_datetime.date()
     current_time = current_datetime.time()
     # print(current_date)
-    print(current_time)
+    # print(current_time)
     
     schedules = ClassSchedule.objects.filter(student=student)
 

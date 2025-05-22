@@ -21,9 +21,10 @@
                     <td class="text-center">
                         {% if week.details %}
                         <a href="#" class="text-success" data-bs-toggle="modal" data-bs-target="#detailsModal"
-                           data-details="{{ week.details }}">
+                            data-details="{{ week.details }}">
                             <i class="fas fa-check-circle"></i>
                         </a>
+                        {% elif week.is_future %}
                         {% else %}
                         <i class="fas fa-times-circle text-danger"></i>
                         {% endif %}
@@ -31,7 +32,8 @@
                     {% endfor %}
                     <td class="text-center">
                         {% if student.can_warn %}
-                        <a href="{% url 'attendance:send_warning_email' student.student.account_id course.course_id %}" class="btn btn-warning btn-sm">
+                        <a href="{% url 'attendance:send_warning_email' student.student.account_id course.course_id %}"
+                            class="btn btn-warning btn-sm">
                             Gửi
                         </a>
                         {% else %}
