@@ -215,7 +215,7 @@ def export_attendance(request, course_id):
 def student_schedule_week(request, account_id):
     student = get_object_or_404(Account, account_id=account_id)
     current_date = timezone.now().date()
-    # lấy thứ 2 của tuần hiện tại
+    # lay danh sach 7 ngay trong tuan chua current_date
     start_of_week = current_date - timedelta(days=current_date.weekday()) 
     week_dates = [start_of_week + timedelta(days=i) for i in range(7)]  
 

@@ -19,6 +19,7 @@ def attendance_history(request, account_id):
     for course in courses:
         start_date = course.start_date
         end_date = course.end_date
+        #tao ngay bat dau cac tuan
         weeks = []
         current_date = start_date
         while current_date <= end_date:
@@ -85,7 +86,6 @@ def attendance_statistic_detail(request, course_id):
     course = get_object_or_404(Course, course_id=course_id)
     start_date = course.start_date
     end_date = course.end_date
-    from datetime import date
     
     weeks = []
     current_date = start_date
